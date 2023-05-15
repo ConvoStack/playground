@@ -2,6 +2,8 @@
 
 Run the following steps in your terminal to get started!
 
+P.S. You can copy/paste the instructions below directly into your terminal to get the demo up and running in seconds!
+
 ```bash
 # Clone the getting started repo
 git clone https://github.com/ConvoStack/getting-started convostack-getting-started
