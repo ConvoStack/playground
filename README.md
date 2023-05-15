@@ -4,23 +4,24 @@ Run the following steps in your terminal to get started!
 
 ```bash
 # Clone the getting started repo
-git clone https://github.com/ConvoStack/getting-started
+git clone https://github.com/ConvoStack/getting-started convostack-getting-started
 
 # Enter the project root directory
-cd getting-started
+cd convostack-getting-started
 
-# Install dependencies
+# Install all dependencies
 npm install
 
-# Setup your .env using the example provided
+# Setup your backend .env using the example provided
 # Optionally, edit the apps/backend/.env file to set your OpenAI API key to try the GPT-3.5 or GPT-4 the langchain demo
-cp apps/backend/.env.example apps/backend/.env
+cd apps/backend
+cp .env.example .env
 
 # Run the database migrations on a sqlite DB for development
 npm run migrate
 
 # Get back into the root of the project
-cd ..
+cd ../..
 
 # Start the full-stack demo
 npm run dev
