@@ -2,7 +2,7 @@
 
 Run the following steps in your terminal to get started!
 
-```
+```bash
 # Clone the getting started repo
 git clone https://github.com/ConvoStack/getting-started
 
