@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "tubo build",
+    "migrate": "turbo migrate"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "dependencies": {
+    "turbo": "^1.9.4"
+  }
+}
