@@ -1,4 +1,5 @@
 import { EmbedChat, useConvoStack } from "convostack/frontend-react";
+import { ChangeEvent, useState } from "react";
 
 const App: React.FC = () => {
   const {
@@ -6,7 +7,15 @@ const App: React.FC = () => {
     isConversationWindowVisible,
     openConversationList,
     openConversation,
+    updateContext,
+    activeConversationId,
   } = useConvoStack();
+  const [selectedValue, setSelectedValue] = useState("LOL");
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedValue(event.target.value);
+  };
+  console.log(import.meta.env.VITE_GRAPHQL_URL);
+
   return (
     <div className="mx-4 mt-4">
       <div className="flex flex-row">
@@ -16,7 +25,7 @@ const App: React.FC = () => {
 
       <div className="flex flex-row mt-4 border-1 rounded-md">
         <div className="flex flex-col w-1/4 border-r-1 pb-8 px-2">
-          <p className="text-lg font-bold pt-4">Get Started</p>
+          <p className="text-lg font-bold pt-5">Get Started</p>
           <p className="text-sm mt-4">
             Welcome to the ConvoStack "Getting Started" Repo. Here, you can try
             our developer playground that demonstrates some of the things you
@@ -98,10 +107,14 @@ const App: React.FC = () => {
           <div className="border-b-1 pb-4 mb-4 flex flex-row items-center justify-between">
             <p className="text-lg font-bold ml-4 pt-4">Playground</p>
             <div className="mr-4 mt-4">
-              <select className="border border-gray-300 bg-white text-sm rounded-lg block w-48 pl-2 py-2.5 dark:placeholder-gray-400 focus:ring-0 focus:outline-none">
-                <option defaultValue={"default"}>Load an agent...</option>
-                <option value="US">Default</option>
-                <option value="CA">OpenAI</option>
+              <select
+                value={selectedValue}
+                onChange={handleSelectChange}
+                className="border border-gray-300 bg-white text-sm rounded-lg block w-48 pl-2 py-2.5 dark:placeholder-gray-400 focus:ring-0 focus:outline-none"
+              >
+                <option value={"LOL"}>Load an agent...</option>
+                <option value="Default">Default</option>
+                <option value="OpenAI">OpenAI</option>
               </select>
             </div>
           </div>
@@ -133,7 +146,13 @@ const App: React.FC = () => {
                 Open New Conversation
               </button>
               <button
-                onClick={() => openConversation(null)}
+                onClick={() =>
+                  activeConversationId
+                    ? updateContext(activeConversationId, {
+                        example: "example",
+                      })
+                    : null
+                }
                 className="bg-neutral-300 mb-8 text-sm rounded-md mt-2 p-1 hover:bg-neutral-400"
               >
                 Update Context
@@ -156,7 +175,13 @@ const App: React.FC = () => {
                 Open New Conversation
               </button>
               <button
-                onClick={() => openConversation(null)}
+                onClick={() =>
+                  activeConversationId
+                    ? updateContext(activeConversationId, {
+                        example: "example",
+                      })
+                    : null
+                }
                 className="bg-neutral-300 mb-2 text-sm rounded-md mt-2 p-1 hover:bg-neutral-400"
               >
                 Update Context

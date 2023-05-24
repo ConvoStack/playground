@@ -7,8 +7,8 @@ import App from "./App";
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <>
     <ConvoStackWrapper
-      graphqlUrl="http://localhost:3000/graphql"
-      websocketUrl="ws://localhost:3000/graphql"
+      graphqlUrl={import.meta.env.VITE_GRAPHQL_URL}
+      websocketUrl={import.meta.env.VITE_WS_URL}
       userData={{
         email: "optional.user.email@example.com",
         name: "Optional Name",
