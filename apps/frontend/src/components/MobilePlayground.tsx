@@ -30,6 +30,7 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
   const [selectedValue, setSelectedValue] = useState<string>("default");
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
+    openConversation(null, event.target.value, undefined, "test");
   };
   const [showTips, setShowTips] = useState(true);
   const [agents, setAgents] = useState<Agents[]>([]);
