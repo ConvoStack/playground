@@ -1,8 +1,9 @@
 // Setup dotenv before doing anything else
 import * as dotenv from "dotenv";
+
 dotenv.config();
 
-import {ConvoStackBackendExpress} from "convostack/backend-express";
+import {ConvoStackBackendExpress, IConversationEventServiceOptions} from "convostack/backend-express";
 import express from "express";
 import {StorageEnginePrismaSQLite} from "convostack/storage-engine-prisma-sqlite";
 import {StorageEnginePrismaPostgres} from "convostack/storage-engine-prisma-postgres";
@@ -14,6 +15,8 @@ import {createServer} from "http";
 import {DefaultAgentManager, IDefaultAgentManagerAgentsConfig} from "convostack/agent";
 import {AgentEcho} from "convostack/agent-echo";
 import {LangchainChat} from "./langchain-chat";
+import {RedisPubSub} from "graphql-redis-subscriptions";
+import Redis, {RedisOptions} from "ioredis";
 import path from "path";
 
 const port = process.env.PORT || "3000";
@@ -71,6 +74,14 @@ const main = async () => {
         default:
             throw new Error(`Invalid storage engine: ${process.env.STORAGE_ENGINE}`)
     }
+    const convEventsOpts = {} as IConversationEventServiceOptions;
+    if (process.env.REDIS_URL) {
+        convEventsOpts.pubSubEngine = new RedisPubSub({
+            connection: process.env.REDIS_URL
+        });
+        convEventsOpts.cache = new Redis(process.env.REDIS_URL);
+    }
+
     const backend = new ConvoStackBackendExpress({
         basePath: "/",
         storage,
@@ -82,7 +93,8 @@ const main = async () => {
                 process.env.REQUIRE_USER_VERIFICATION_HASH == "false"
             )
         }),
-        agents: new DefaultAgentManager(agents, defaultAgentKey)
+        agents: new DefaultAgentManager(agents, defaultAgentKey),
+        conversationEventServiceOptions: convEventsOpts,
     });
 
     await backend.init(app, httpServer);
