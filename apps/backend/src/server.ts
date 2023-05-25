@@ -63,6 +63,7 @@ const main = async () => {
         res.json(Object.keys(agents).map(agentKey => {
             return {
                 ...agents[agentKey].metadata,
+                key: agentKey,
                 isDefault: agentKey === defaultAgentKey
             }
         }));
