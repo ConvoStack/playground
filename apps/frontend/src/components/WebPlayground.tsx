@@ -122,7 +122,7 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
                   Open Conversation List
                 </button>
                 <button
-                  onClick={() => openConversation(null)}
+                  onClick={() => openConversation(null, selectedValue)}
                   className="bg-neutral-300 mb-2 text-sm rounded-md mt-2 p-1 hover:bg-neutral-400"
                 >
                   Open New Conversation
@@ -143,7 +143,7 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
                 </button>
                 <button
                   onClick={() =>
-                    openConversation(null, undefined, undefined, "test")
+                    openConversation(null, selectedValue, undefined, "test")
                   }
                   className="bg-neutral-300 mb-2 text-sm rounded-md mt-2 p-1 hover:bg-neutral-400"
                 >
