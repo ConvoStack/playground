@@ -14,7 +14,7 @@ import {AuthJWT} from "convostack/auth-jwt";
 import {createServer} from "http";
 import {DefaultAgentManager, IDefaultAgentManagerAgentsConfig} from "convostack/agent";
 import {AgentEcho} from "convostack/agent-echo";
-import {LangchainChat} from "./langchain-chat";
+import {LangchainChat} from "./agents/langchain-chat";
 import {RedisPubSub} from "graphql-redis-subscriptions";
 import Redis, {RedisOptions} from "ioredis";
 import path from "path";
@@ -34,6 +34,13 @@ const corsOptions: CorsOptions = {
 const defaultAgentKey = "default";
 const agents: { [key: string]: IDefaultAgentManagerAgentsConfig } = {
     "default": {
+        agent: new LangchainChat(),
+        metadata: {
+            displayName: "OpenAI Chat",
+            primer: "I am an OpenAI-powered Langchain chat assistant. Write me a message, and I will do my best!"
+        }
+    },
+    "echo-agent": {
         agent: new AgentEcho(),
         metadata: {
             displayName: "Echo Agent",
@@ -41,17 +48,6 @@ const agents: { [key: string]: IDefaultAgentManagerAgentsConfig } = {
         }
     }
 };
-
-// If the OPENAI_API_KEY environment variable is set, power up to the GPT langchain demo!
-if (process.env.OPENAI_API_KEY) {
-    agents["default"] = {
-        agent: new LangchainChat(),
-        metadata: {
-            displayName: "OpenAI Chat",
-            primer: "I am an OpenAI-powered Langchain chat assistant. Write me a message, and I will do my best!"
-        }
-    }
-}
 
 const main = async () => {
     const app = express();

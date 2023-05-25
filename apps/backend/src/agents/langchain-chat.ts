@@ -8,12 +8,20 @@ import {
 import { ConversationChain } from "langchain/chains";
 import { BufferMemory } from "langchain/memory";
 import { ConvoStackLangchainChatMessageHistory } from "convostack/langchain-memory";
+import {OPENAI_API_KEY_NOT_SET_MESSAGE} from "../utils/errors";
 
 export class LangchainChat implements IAgent {
     async reply(
         context: IAgentContext,
         callbacks?: IAgentCallbacks
     ): Promise<IAgentResponse> {
+        if (!process.env.OPENAI_API_KEY) {
+            return {
+                content: OPENAI_API_KEY_NOT_SET_MESSAGE,
+                contentType: "markdown"
+            }
+        }
+
         const chat = new ChatOpenAI({
             modelName: 'gpt-3.5-turbo', // Optionally, try using gpt-4 if you have access
             temperature: 0,

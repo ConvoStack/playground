@@ -1,7 +1,8 @@
 {
   "scripts": {
     "dev": "turbo dev",
-    "build:production": "turbo build:production"
+    "build:production": "turbo build:production",
+    "deploy": "npm run build:production && cd apps/backend && fly deploy"
   },
   "workspaces": [
     "packages/*",
