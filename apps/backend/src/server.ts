@@ -55,7 +55,19 @@ if (process.env.OPENAI_API_KEY) {
 
 const main = async () => {
     const app = express();
+    // Setup CORS middleware app-wide
     app.use(cors(corsOptions));
+
+    // Let the client get a list of the agents that are currently available
+    app.get('/api/agents', (req, res) => {
+        res.json(Object.keys(agents).map(agentKey => {
+            return {
+                ...agents[agentKey].metadata,
+                isDefault: agentKey === defaultAgentKey
+            }
+        }));
+    });
+
     const httpServer = createServer(app);
     let storage: IStorageEngine;
     switch (process.env.STORAGE_ENGINE) {
