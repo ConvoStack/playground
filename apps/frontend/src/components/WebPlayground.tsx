@@ -30,6 +30,7 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
   const [selectedValue, setSelectedValue] = useState<string>("default");
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
+    openConversation(null, event.target.value, undefined, "test");
   };
   const [agents, setAgents] = useState<Agents[]>([]);
   const [loading, setLoading] = useState(true);
