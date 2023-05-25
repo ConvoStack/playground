@@ -1,0 +1,23 @@
+# fly.toml app configuration file generated for convostack-getting-started on 2023-05-25T01:11:00-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "convostack-getting-started"
+primary_region = "iad"
+
+[env]
+  ALLOW_ANONYMOUS_USERS = "true"
+  CORS_ALLOWED_ORIGINS = "http://localhost:3000,https://studio.apollographql.com,https://convostack-getting-started.fly.dev,https://convostack.ai,https://docs.convostack.ai"
+  HOST = "0.0.0.0"
+  PORT = "3000"
+  REQUIRE_USER_VERIFICATION_HASH = "false"
+  STORAGE_ENGINE = "postgres"
+  NODE_ENV = "production"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0

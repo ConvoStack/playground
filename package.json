@@ -1,8 +1,7 @@
 {
   "scripts": {
     "dev": "turbo dev",
-    "build": "tubo build",
-    "migrate": "turbo migrate"
+    "build:production": "turbo build:production"
   },
   "workspaces": [
     "packages/*",

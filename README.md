@@ -20,7 +20,7 @@ cd apps/backend
 cp .env.example .env
 
 # Run the database migrations on a sqlite DB for development
-npm run migrate
+npm run migrate-sqlite
 
 # Get back into the root of the project
 cd ../..

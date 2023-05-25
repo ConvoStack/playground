@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development vite",
     "build:development": "tsc && cross-env NODE_ENV=development vite build",
-    "build:production": "tsc && cross-env NODE_ENV=production vite build",
+    "build:production": "tsc && cross-env NODE_ENV=production vite build && rm -rf ../backend/dist-fe && cp -a ./dist ../backend/dist-fe",
     "build": "npm run build:development",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"

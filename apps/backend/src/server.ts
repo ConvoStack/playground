@@ -1,22 +1,28 @@
-import { ConvoStackBackendExpress } from "convostack/backend-express";
-import express from "express";
-import { StorageEnginePrismaSQLite } from "convostack/storage-engine-prisma-sqlite";
-import cors, { CorsOptions } from "cors";
-import { AuthJWT } from "convostack/auth-jwt";
-import { createServer } from "http";
+// Setup dotenv before doing anything else
 import * as dotenv from "dotenv";
-import { DefaultAgentManager, IDefaultAgentManagerAgentsConfig } from "convostack/agent";
-import { AgentEcho } from "convostack/agent-echo";
-import { LangchainChat } from "./langchain-chat";
-
 dotenv.config();
+
+import {ConvoStackBackendExpress} from "convostack/backend-express";
+import express from "express";
+import {StorageEnginePrismaSQLite} from "convostack/storage-engine-prisma-sqlite";
+import {StorageEnginePrismaPostgres} from "convostack/storage-engine-prisma-postgres";
+import {StorageEnginePrismaMySQL} from "convostack/storage-engine-prisma-mysql";
+import {IStorageEngine} from "convostack/models"
+import cors, {CorsOptions} from "cors";
+import {AuthJWT} from "convostack/auth-jwt";
+import {createServer} from "http";
+import {DefaultAgentManager, IDefaultAgentManagerAgentsConfig} from "convostack/agent";
+import {AgentEcho} from "convostack/agent-echo";
+import {LangchainChat} from "./langchain-chat";
+import path from "path";
 
 const port = process.env.PORT || "3000";
 const host = process.env.HOST || "localhost";
+const origins = process.env.CORS_ALLOWED_ORIGINS ? process.env.CORS_ALLOWED_ORIGINS.split(',') : ["http://localhost:5173", "https://studio.apollographql.com"]
 console.log("Configuring server...");
 
 const corsOptions: CorsOptions = {
-    origin: ["http://localhost:5173", "https://studio.apollographql.com"],
+    origin: origins,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     preflightContinue: false,
     optionsSuccessStatus: 204
@@ -48,8 +54,23 @@ const main = async () => {
     const app = express();
     app.use(cors(corsOptions));
     const httpServer = createServer(app);
-    const storage = new StorageEnginePrismaSQLite(process.env.DATABASE_URL);
-    await storage.init();
+    let storage: IStorageEngine;
+    switch (process.env.STORAGE_ENGINE) {
+        case 'sqlite':
+            storage = new StorageEnginePrismaSQLite(process.env.DATABASE_URL);
+            await (storage as StorageEnginePrismaSQLite).init();
+            break;
+        case 'postgres':
+            storage = new StorageEnginePrismaPostgres(process.env.DATABASE_URL);
+            await (storage as StorageEnginePrismaPostgres).init();
+            break;
+        case 'mysql':
+            storage = new StorageEnginePrismaMySQL(process.env.DATABASE_URL);
+            await (storage as StorageEnginePrismaMySQL).init();
+            break;
+        default:
+            throw new Error(`Invalid storage engine: ${process.env.STORAGE_ENGINE}`)
+    }
     const backend = new ConvoStackBackendExpress({
         basePath: "/",
         storage,
@@ -65,6 +86,24 @@ const main = async () => {
     });
 
     await backend.init(app, httpServer);
+
+    // Used for serving the React frontend app when bundled in production (see: Dockerfile)
+    if (process.env.NODE_ENV === 'production') {
+        // This code makes sure that any request that does not matches a static file
+        // in the build folder, will just serve index.html. Client side routing is
+        // going to make sure that the correct content will be loaded.
+        app.use((req, res, next) => {
+            if (/(.ico|.js|.css|.jpg|.png|.map)$/i.test(req.path)) {
+                next();
+            } else {
+                res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+                res.header('Expires', '-1');
+                res.header('Pragma', 'no-cache');
+                res.sendFile(path.join(__dirname, '../dist-fe', 'index.html'));
+            }
+        });
+        app.use(express.static(path.join(__dirname, '../dist-fe')));
+    }
 
     console.log(`Starting server on port ${port}...`);
     httpServer.listen(parseInt(port), host, () => {
