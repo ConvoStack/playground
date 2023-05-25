@@ -18,6 +18,7 @@ import {LangchainChat} from "./agents/langchain-chat";
 import {RedisPubSub} from "graphql-redis-subscriptions";
 import Redis, {RedisOptions} from "ioredis";
 import path from "path";
+import {LangchainConversationalRetrievalQA} from "./agents/langchain-conversational-retrieval-qa";
 
 const port = process.env.PORT || "3000";
 const host = process.env.HOST || "localhost";
@@ -46,7 +47,14 @@ const agents: { [key: string]: IDefaultAgentManagerAgentsConfig } = {
             displayName: "Echo Agent",
             primer: "This is demo echo agent. Write me a message, and I will stream it back to you! P.S., Set the OPENAI_API_KEY environment variable to power up to the OpenAI langchain chat demo!"
         }
-    }
+    },
+    "langchain-conversational-retrieval-qa": {
+        agent: new LangchainConversationalRetrievalQA(),
+        metadata: {
+            displayName: "OpenAI Conversational QA",
+            primer: "I am an OpenAI-powered Langchain Conversational Retriever QA Chain. Ask me questions about the state of the union document."
+        }
+    },
 };
 
 const main = async () => {
