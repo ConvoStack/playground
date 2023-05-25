@@ -9,16 +9,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <ConvoStackWrapper
       graphqlUrl={import.meta.env.VITE_GRAPHQL_URL}
       websocketUrl={import.meta.env.VITE_WS_URL}
-      userData={{
-        email: "optional.user.email@example.com",
-        name: "Optional Name",
-        anonymousId: "",
-        hash: "optional-id-verification-hash",
-        externalId: "example-id-in-your-system",
-      }}
       customStyling={{
         // headerColor: "bg-black",
         headerText: "Hello, ConvoStack",
+        headerTextColor: "text-white",
+        iconsColor: "white",
         // widgetLaunchButtonColor: "bg-black",
         widgetLocation: "left",
         widgetWindowWidth: "w-[370px]",
