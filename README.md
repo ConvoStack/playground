@@ -1,15 +1,17 @@
-# Getting Started with ConvoStack
+# ConvoStack Playground
 
 Run the following steps in your terminal to get started!
 
 P.S. You can copy/paste the instructions below directly into your terminal to get the demo up and running in seconds!
 
+## Quickstart
+
 ```bash
-# Clone the getting started repo
-git clone https://github.com/ConvoStack/getting-started convostack-getting-started
+# Clone the repo
+git clone https://github.com/ConvoStack/playground convostack-playground
 
 # Enter the project root directory
-cd convostack-getting-started
+cd convostack-playground
 
 # Install all dependencies
 npm install
