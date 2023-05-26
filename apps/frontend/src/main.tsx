@@ -16,7 +16,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         iconsColor: "white",
         // widgetLaunchButtonColor: "bg-black",
         widgetLocation: "left",
-        widgetWindowWidth: "w-[370px]",
       }}
     >
       <App />

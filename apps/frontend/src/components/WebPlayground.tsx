@@ -95,17 +95,17 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
               )}
             </div>
           </div>
-          <div className="flex flex-row ml-4">
+          <div className="flex flex-row ml-4 pb-4">
             <EmbedChat
               id="test"
               customStyling={{
-                embedWidth: "w-full",
-                embedHeight: "h-96",
+                embedWidth: "100%",
+                embedHeight: "calc(100vh - 280px)",
                 iconsColor: "white",
                 headerTextColor: "text-white",
               }}
             />
-            <div className="overflow-y-scroll h-96 w-96">
+            <div className="overflow-y-scroll h-[calc(100vh-280px)] w-96">
               <div className="flex flex-col mx-4 ">
                 <p className="font-bold text-sm border-b-1 mb-2 pb-2">
                   Widget Settings

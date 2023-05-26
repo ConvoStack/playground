@@ -123,8 +123,7 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
               <EmbedChat
                 id="test"
                 customStyling={{
-                  embedWidth: "w-full",
-                  embedHeight: "h-96",
+                  embedWidth: "100%",
                   headerTextColor: "text-white",
                   iconsColor: "white",
                 }}
