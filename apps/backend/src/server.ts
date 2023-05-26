@@ -19,6 +19,7 @@ import {RedisPubSub} from "graphql-redis-subscriptions";
 import Redis, {RedisOptions} from "ioredis";
 import path from "path";
 import {LangchainConversationalRetrievalQA} from "./agents/langchain-conversational-retrieval-qa";
+import {LangchainPineconeChatQA} from "./agents/langchain-pinecone-chat-qa";
 
 const port = process.env.PORT || "3000";
 const host = process.env.HOST || "localhost";
@@ -53,6 +54,13 @@ const agents: { [key: string]: IDefaultAgentManagerAgentsConfig } = {
         metadata: {
             displayName: "OpenAI Conversational QA",
             primer: "I am an OpenAI-powered Langchain Conversational Retriever QA Chain. Ask me questions about the state of the union document."
+        }
+    },
+    "langchain-pinecone-chat-qa": {
+        agent: new LangchainPineconeChatQA(),
+        metadata: {
+            displayName: "Langchain+OpenAI+Pinecone Chat QA (ConvoStack Docs)",
+            primer: "I am an OpenAI and Pinecone-powered Langchain QA Chain. Ask me anything about the ConvoStack docs."
         }
     },
 };
