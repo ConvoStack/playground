@@ -13,22 +13,20 @@ import {PINECONE_API_KEY_NOT_SET_MESSAGE} from "../../utils/errors";
 import {BufferMemory} from "langchain/memory";
 import {ConvoStackLangchainChatMessageHistory} from "convostack/langchain-memory";
 
-
-const llm = new OpenAI({});
-let pinecone: PineconeClient | null = null
-
-const initPineconeClient = async () => {
-    pinecone = new PineconeClient();
-    await pinecone.init({
-        environment: process.env.PINECONE_ENVIRONMENT!,
-        apiKey: process.env.PINECONE_API_KEY!,
-    });
-}
-
 /**
  * Adapted from https://github.com/pinecone-io/chatbot-demo
  */
 export class LangchainPineconeChatQA implements IAgent {
+    pinecone: PineconeClient | null = null
+
+    async initPineconeClient() {
+        this.pinecone = new PineconeClient();
+        await this.pinecone.init({
+            environment: process.env.PINECONE_ENVIRONMENT!,
+            apiKey: process.env.PINECONE_API_KEY!,
+        });
+    }
+
     async reply(
         context: IAgentContext,
         callbacks?: IAgentCallbacks
@@ -40,16 +38,18 @@ export class LangchainPineconeChatQA implements IAgent {
             }
         }
 
-        if (!pinecone) {
-            await initPineconeClient();
+        if (!this.pinecone) {
+            await this.initPineconeClient();
         }
 
         let summarizedCount = 0;
+        const llm = new OpenAI({});
 
         try {
             // Build an LLM chain that will improve the user prompt
             const inquiryChain = new LLMChain({
-                llm, prompt: new PromptTemplate({
+                llm,
+                prompt: new PromptTemplate({
                     template: templates.inquiryTemplate,
                     inputVariables: ["userPrompt", "conversationHistory"],
                 })
@@ -79,7 +79,7 @@ export class LangchainPineconeChatQA implements IAgent {
             const embeddings = await embedder.embedQuery(inquiry);
             console.log('Finding matches...')
 
-            const matches = await getMatchesFromEmbeddings(embeddings, pinecone!, 2);
+            const matches = await getMatchesFromEmbeddings(embeddings, this.pinecone!, 2);
 
 
             const urls = matches && Array.from(new Set(matches.map(match => {
