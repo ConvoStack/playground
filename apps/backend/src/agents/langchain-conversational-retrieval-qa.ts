@@ -38,7 +38,7 @@ export class LangchainConversationalRetrievalQA implements IAgent {
             ],
         });
         /* Load in the file we want to do question answering over */
-        const text = fs.readFileSync("state_of_the_union.txt", "utf8");
+        const text = fs.readFileSync("./datasets/state_of_the_union.txt", "utf8");
         /* Split the text into chunks */
         const textSplitter = new RecursiveCharacterTextSplitter({chunkSize: 1000});
         const docs = await textSplitter.createDocuments([text]);
@@ -49,7 +49,6 @@ export class LangchainConversationalRetrievalQA implements IAgent {
             model,
             vectorStore.asRetriever()
         );
-        console.log(context.getHistory())
         chain.memory = new BufferMemory({
             chatHistory: new ConvoStackLangchainChatMessageHistory({
                 history: context.getHistory()
@@ -69,4 +68,3 @@ export class LangchainConversationalRetrievalQA implements IAgent {
         };
     }
 }
-
