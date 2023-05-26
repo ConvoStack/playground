@@ -57,9 +57,9 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
         <div className="flex flex-col w-96 border-r-1 pb-8 px-2">
           <p className="text-lg font-bold pt-5">Get Started</p>
           <p className="text-sm mt-4">
-            Welcome to the ConvoStack "Getting Started" Repo. Here, you can try
-            our developer playground that demonstrates some of the things you
-            can do with the ConvoStack library.{" "}
+            Welcome to the ConvoStack Playground Repo. Here, you can try our
+            developer playground that demonstrates some of the things you can do
+            with the ConvoStack library.{" "}
           </p>
           <p className="text-sm mt-4">
             We encourage you to learn from this example or build upon it with
