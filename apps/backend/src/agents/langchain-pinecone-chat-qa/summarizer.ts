@@ -4,8 +4,6 @@ import {LLMChain, PromptTemplate} from "langchain";
 import Bottleneck from "bottleneck";
 import {StructuredOutputParser} from "langchain/output_parsers";
 
-const llm = new OpenAI({concurrency: 10, temperature: 0, modelName: "gpt-3.5-turbo"});
-
 const {summarizerTemplate, summarizerDocumentTemplate} = templates;
 
 const parser = StructuredOutputParser.fromNamesAndDescriptions({
@@ -40,6 +38,7 @@ const summarize = async ({document, inquiry, onSummaryDone}: {
         template: inquiry ? summarizerTemplate : summarizerDocumentTemplate,
         inputVariables: inquiry ? ["document", "inquiry"] : ["document"],
     });
+    const llm = new OpenAI({concurrency: 10, temperature: 0, modelName: "gpt-3.5-turbo"});
     const chain = new LLMChain({
         prompt: promptTemplate,
         llm
