@@ -8,7 +8,7 @@ primary_region = "iad"
 
 [env]
   ALLOW_ANONYMOUS_USERS = "true"
-  CORS_ALLOWED_ORIGINS = "http://localhost:3000,https://studio.apollographql.com,https://convostack-getting-started.fly.dev,https://convostack.ai,https://docs.convostack.ai,https://playground.convostack.ai"
+  CORS_ALLOWED_ORIGINS = "http://localhost:3000,http://localhost:5173,https://studio.apollographql.com,https://convostack-getting-started.fly.dev,https://convostack.ai,https://docs.convostack.ai,https://playground.convostack.ai"
   HOST = "0.0.0.0"
   PORT = "3000"
   REQUIRE_USER_VERIFICATION_HASH = "false"
@@ -20,4 +20,4 @@ primary_region = "iad"
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
