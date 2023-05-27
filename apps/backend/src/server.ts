@@ -3,12 +3,12 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-import {ConvoStackBackendExpress, IConversationEventServiceOptions} from "convostack/backend-express";
+import {ConvoStackBackendExpress} from "convostack/backend-express";
 import express from "express";
 import {StorageEnginePrismaSQLite} from "convostack/storage-engine-prisma-sqlite";
 import {StorageEnginePrismaPostgres} from "convostack/storage-engine-prisma-postgres";
 import {StorageEnginePrismaMySQL} from "convostack/storage-engine-prisma-mysql";
-import {IStorageEngine} from "convostack/models"
+import {IStorageEngine, IConversationEventServiceOptions} from "convostack/models"
 import cors, {CorsOptions} from "cors";
 import {AuthJWT} from "convostack/auth-jwt";
 import {createServer} from "http";
