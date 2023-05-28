@@ -1,8 +1,8 @@
 # ConvoStack Playground
 
-Run the following steps in your terminal to get started!
+ConvoStack is a plug and play embeddable AI chatbot widget and backend deployment framework. To get started with ConvoStack, check out our docs [here](https://docs.convostack.ai/getting-started/quickstart-react-express-playground).
 
-P.S. You can copy/paste the instructions below directly into your terminal to get the demo up and running in seconds!
+P.S. You can copy/paste the instructions below directly into your terminal to get the playground up and running in seconds!
 
 ## Quickstart
 
