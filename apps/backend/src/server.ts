@@ -14,10 +14,10 @@ import {AuthJWT} from "convostack/auth-jwt";
 import {createServer} from "http";
 import {DefaultAgentManager} from "convostack/agent";
 import {RedisPubSub} from "graphql-redis-subscriptions";
-import Redis from "ioredis";
 import path from "path";
 import {serveStaticReactAppHandler} from "./utils/static";
 import {agents, defaultAgentKey} from "./agents";
+import {createRedisInstance} from "./utils/redis";
 
 // Start configuring the server
 console.log("Configuring server...");
@@ -77,9 +77,13 @@ const main = async () => {
     const convEventsOpts = {} as IConversationEventServiceOptions;
     if (process.env.REDIS_URL) {
         convEventsOpts.pubSubEngine = new RedisPubSub({
-            connection: process.env.REDIS_URL
+            subscriber: createRedisInstance(process.env.REDIS_URL),
+            publisher: createRedisInstance(process.env.REDIS_URL),
+            connectionListener: (err) => {
+                console.error(`Redis pub/sub engine error: ${err}`);
+            }
         });
-        convEventsOpts.cache = new Redis(process.env.REDIS_URL);
+        convEventsOpts.cache = createRedisInstance(process.env.REDIS_URL);
     }
 
     // Setup the ConvoStack backend
