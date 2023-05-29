@@ -1,6 +1,6 @@
 // Setup dotenv before doing anything else
 import * as dotenv from "dotenv";
-
+// Load the config from .env
 dotenv.config();
 
 import {ConvoStackBackendExpress} from "convostack/backend-express";
@@ -12,20 +12,20 @@ import {IStorageEngine, IConversationEventServiceOptions} from "convostack/model
 import cors, {CorsOptions} from "cors";
 import {AuthJWT} from "convostack/auth-jwt";
 import {createServer} from "http";
-import {DefaultAgentManager, IDefaultAgentManagerAgentsConfig} from "convostack/agent";
-import {AgentEcho} from "convostack/agent-echo";
-import {LangchainChat} from "./agents/langchain-chat";
+import {DefaultAgentManager} from "convostack/agent";
 import {RedisPubSub} from "graphql-redis-subscriptions";
-import Redis, {RedisOptions} from "ioredis";
 import path from "path";
-import {LangchainConversationalRetrievalQA} from "./agents/langchain-conversational-retrieval-qa";
-import {LangchainPineconeChatQA} from "./agents/langchain-pinecone-chat-qa";
+import {serveStaticReactAppHandler} from "./utils/static";
+import {agents, defaultAgentKey} from "./agents";
+import {createRedisInstance} from "./utils/redis";
 
+// Start configuring the server
+console.log("Configuring server...");
 const port = process.env.PORT || "3000";
 const host = process.env.HOST || "localhost";
 const origins = process.env.CORS_ALLOWED_ORIGINS ? process.env.CORS_ALLOWED_ORIGINS.split(',') : ["http://localhost:5173", "https://studio.apollographql.com"]
-console.log("Configuring server...");
 
+// CORS setup is important to make sure that browsers don't block our clients' ConvoStack API requests
 const corsOptions: CorsOptions = {
     origin: origins,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -33,40 +33,10 @@ const corsOptions: CorsOptions = {
     optionsSuccessStatus: 204
 };
 
-const defaultAgentKey = "default";
-const agents: { [key: string]: IDefaultAgentManagerAgentsConfig } = {
-    "default": {
-        agent: new LangchainChat(),
-        metadata: {
-            displayName: "OpenAI Chat",
-            primer: "I am an OpenAI-powered Langchain chat assistant. Write me a message, and I will do my best!"
-        }
-    },
-    "echo-agent": {
-        agent: new AgentEcho(),
-        metadata: {
-            displayName: "Echo Agent",
-            primer: "This is demo echo agent. Write me a message, and I will stream it back to you! P.S., Set the OPENAI_API_KEY environment variable to power up to the OpenAI langchain chat demo!"
-        }
-    },
-    "langchain-conversational-retrieval-qa": {
-        agent: new LangchainConversationalRetrievalQA(),
-        metadata: {
-            displayName: "OpenAI Conversational QA",
-            primer: "I am an OpenAI-powered Langchain Conversational Retriever QA Chain. Ask me questions about the state of the union document."
-        }
-    },
-    "langchain-pinecone-chat-qa": {
-        agent: new LangchainPineconeChatQA(),
-        metadata: {
-            displayName: "ConvoStack Docs Agent",
-            primer: "I am an OpenAI and Pinecone-powered Langchain QA Chain. Ask me anything about the ConvoStack docs."
-        }
-    },
-};
-
 const main = async () => {
+    // Create an Express app for our endpoints, playground client, and ConvoStack
     const app = express();
+
     // Setup CORS middleware app-wide
     app.use(cors(corsOptions));
 
@@ -81,7 +51,10 @@ const main = async () => {
         }));
     });
 
+    // Create an HTTP server to host our Express app
     const httpServer = createServer(app);
+
+    // Select and init a storage backend depending on the configuration
     let storage: IStorageEngine;
     switch (process.env.STORAGE_ENGINE) {
         case 'sqlite':
@@ -99,16 +72,22 @@ const main = async () => {
         default:
             throw new Error(`Invalid storage engine: ${process.env.STORAGE_ENGINE}`)
     }
+
+    // Setup Redis-based caching and pub/sub if we set the REDIS_URL env var
     const convEventsOpts = {} as IConversationEventServiceOptions;
     if (process.env.REDIS_URL) {
         convEventsOpts.pubSubEngine = new RedisPubSub({
-            connection: process.env.REDIS_URL
+            subscriber: createRedisInstance(process.env.REDIS_URL),
+            publisher: createRedisInstance(process.env.REDIS_URL),
+            connectionListener: (err) => {
+                console.error(`Redis pub/sub engine error: ${err}`);
+            }
         });
-        convEventsOpts.cache = new Redis(process.env.REDIS_URL);
+        convEventsOpts.cache = createRedisInstance(process.env.REDIS_URL);
     }
 
+    // Setup the ConvoStack backend
     const backend = new ConvoStackBackendExpress({
-        basePath: "/",
         storage,
         auth: new AuthJWT(storage, {
             jwtSecret: process.env.JWT_SECRET,
@@ -122,26 +101,16 @@ const main = async () => {
         conversationEventServiceOptions: convEventsOpts,
     });
 
+    // Initialize ConvoStack by connecting it to your Express App and HTTP server
     await backend.init(app, httpServer);
 
     // Used for serving the React frontend app when bundled in production (see: Dockerfile)
     if (process.env.NODE_ENV === 'production') {
-        // This code makes sure that any request that does not matches a static file
-        // in the build folder, will just serve index.html. Client side routing is
-        // going to make sure that the correct content will be loaded.
-        app.use((req, res, next) => {
-            if (/(.ico|.js|.css|.jpg|.png|.map)$/i.test(req.path)) {
-                next();
-            } else {
-                res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-                res.header('Expires', '-1');
-                res.header('Pragma', 'no-cache');
-                res.sendFile(path.join(__dirname, '../dist-fe', 'index.html'));
-            }
-        });
+        app.use(serveStaticReactAppHandler(path.join(__dirname, '../dist-fe', 'index.html')));
         app.use(express.static(path.join(__dirname, '../dist-fe')));
     }
 
+    // Start the HTTP server on your port and host combination
     console.log(`Starting server on port ${port}...`);
     httpServer.listen(parseInt(port), host, () => {
         console.log(`Server is running on http://${host}:${port}/graphql`);

@@ -108,7 +108,6 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
                   onChange={handleSelectChange}
                   className=" bg-white text-sm rounded-lg block pl-2 py-2.5 dark:placeholder-gray-400 focus:ring-0 focus:outline-none border-1"
                 >
-                  <option value="">Load an agent...</option>
                   {agents.map((agent) => (
                     <option key={agent.key} value={agent.key}>
                       {agent.displayName}
