@@ -1,7 +1,7 @@
 // @ts-ignore
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { ConvoStackEmbed, ConvoStackWrapper } from "convostack/frontend-react";
+import { ConvoStackWrapper } from "convostack/frontend-react";
 import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
