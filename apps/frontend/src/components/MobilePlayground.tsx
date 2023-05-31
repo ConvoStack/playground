@@ -1,4 +1,4 @@
-import { EmbedChat, useConvoStack } from "convostack/frontend-react";
+import { ConvoStackEmbed, useConvoStack } from "convostack/frontend-react";
 import { ChangeEvent, useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 import { Agents } from "../types/types";
@@ -20,8 +20,8 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
   setWidgetContext,
 }) => {
   const {
-    toggleWidget,
-    isConversationWindowVisible,
+    toggleWidgetWindow,
+    isWidgetWindowVisible,
     openConversationList,
     openConversation,
     activeConversationId,
@@ -119,12 +119,11 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
           </div>
           <div className="flex flex-col">
             <div className="border-1">
-              <EmbedChat
-                id="test"
+              <ConvoStackEmbed
+                embedId="test"
                 customStyling={{
                   embedWidth: "100%",
-                  headerTextColor: "text-white",
-                  iconsColor: "white",
+                  headerTextColor: "white",
                 }}
               />
             </div>
@@ -133,7 +132,7 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
                 Widget Settings
               </p>
               <button
-                onClick={() => toggleWidget(!isConversationWindowVisible)}
+                onClick={() => toggleWidgetWindow(!isWidgetWindowVisible)}
                 className="bg-neutral-300 mb-2 text-sm rounded-md mt-2 p-1 hover:bg-neutral-400"
               >
                 Toggle
