@@ -9,6 +9,9 @@ primary_region = "iad"
   REQUIRE_USER_VERIFICATION_HASH = "false"
   STORAGE_ENGINE = "postgres"
   NODE_ENV = "production"
+  # We suggest disabling this for your own application
+  # GQL inspection is enabled on the playground for better API discoverability, but is typically not desirable
+  ENABLE_GQL_INTROSPECTION = "true"
 
 [[services]]
   internal_port = 3000

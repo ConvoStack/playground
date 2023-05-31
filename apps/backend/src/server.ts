@@ -102,7 +102,9 @@ const main = async () => {
     });
 
     // Initialize ConvoStack by connecting it to your Express App and HTTP server
-    await backend.init(app, httpServer);
+    await backend.init(app, httpServer, {
+        introspection: process.env.ENABLE_GQL_INTROSPECTION == "true",
+    });
 
     // Used for serving the React frontend app when bundled in production (see: Dockerfile)
     if (process.env.NODE_ENV === 'production') {
