@@ -54,7 +54,7 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
     <div className="mx-4 mt-4">
       <Header />
       <div className="flex flex-row mt-4 border-1 rounded-md">
-        <div className="flex flex-col w-96 border-r-1 pb-8 px-2 flex-shrink-0">
+        <div className="flex flex-col w-80 border-r-1 pb-8 px-2">
           <p className="text-lg font-bold pt-5">Get Started</p>
           <p className="text-sm mt-4">
             Welcome to the ConvoStack Playground Repo. Here, you can try our
@@ -107,7 +107,7 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
                 embedFlex: "1 1 auto",
               }}
             />
-            <div className="overflow-y-scroll h-[calc(100vh-280px)] w-96 mr-2">
+            <div className="overflow-y-scroll h-[calc(100vh-280px)] w-80 mr-2">
               <div className="flex flex-col mx-4 ">
                 <p className="font-bold text-sm border-b-1 mb-2 pb-2">
                   Widget Settings
