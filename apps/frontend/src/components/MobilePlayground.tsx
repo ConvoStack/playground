@@ -121,6 +121,7 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
             <div className="border-1">
               <ConvoStackEmbed
                 embedId="test"
+                defaultAgent={selectedValue}
                 customStyling={{
                   embedWidth: "100%",
                   headerTextColor: "white",
