@@ -98,6 +98,7 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
           <div className="flex flex-row ml-4 pb-4 w-full">
             <ConvoStackEmbed
               embedId="test"
+              defaultAgent={"langchain-pinecone-chat-qa"}
               customStyling={{
                 embedWidth: "0px",
                 embedHeight: "calc(100vh - 280px)",
