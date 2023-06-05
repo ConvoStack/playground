@@ -17,6 +17,12 @@ import {ConvoStackLangchainChatMessageHistory} from "convostack/langchain-memory
  * Adapted from https://github.com/pinecone-io/chatbot-demo
  */
 export class LangchainPineconeChatQA implements IAgent {
+    private agentName: string;
+
+    constructor(agentName: string) {
+        this.agentName = agentName;
+    }
+
     pinecone: PineconeClient | null = null
 
     async initPineconeClient() {
@@ -79,7 +85,7 @@ export class LangchainPineconeChatQA implements IAgent {
             const embeddings = await embedder.embedQuery(inquiry);
             console.log('Finding matches...')
 
-            const matches = await getMatchesFromEmbeddings(embeddings, this.pinecone!, 2);
+            const matches = await getMatchesFromEmbeddings(embeddings, this.pinecone!, 2, this.agentName);
 
 
             const urls = matches && Array.from(new Set(matches.map(match => {

@@ -41,7 +41,7 @@ const sliceIntoChunks = (arr: Vector[], chunkSize: number) => {
     );
 };
 
-export async function crawl(urls: string[], crawlLimit: number = 100, shouldSummarize: boolean = true) {
+export async function crawl(urls: string[], crawlLimit: number = 100, shouldSummarize: boolean = true, agentName: string) {
     if (!process.env.PINECONE_INDEX_NAME) {
         throw new Error("PINECONE_INDEX_NAME not set")
     }
@@ -115,7 +115,7 @@ export async function crawl(urls: string[], crawlLimit: number = 100, shouldSumm
                 await index!.upsert({
                     upsertRequest: {
                         vectors: chunk as Vector[],
-                        namespace: ""
+                        namespace: agentName,
                     }
                 })
             }))

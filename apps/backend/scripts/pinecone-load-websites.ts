@@ -7,9 +7,9 @@ import {crawl} from "../src/agents/langchain-pinecone-chat-qa/crawl";
 import yargs from 'yargs';
 import prompt from 'prompt';
 
-async function main(urls, crawlLimit, shouldSummarize) {
+async function main(urls, crawlLimit, shouldSummarize, agentName) {
     console.log("Starting to load docs into Pinecone");
-    await crawl(urls, crawlLimit, shouldSummarize);
+    await crawl(urls, crawlLimit, shouldSummarize, agentName);
     console.log("Successfully finished loading docs into Pinecone")
 }
 
@@ -37,9 +37,14 @@ yargs
                 default: true,
                 type: 'boolean',
             },
+            agentName: {
+                describe: 'Name of agent',
+                demandOption: true,
+                type: 'string'
+            }
         },
         async handler(argv) {
-            await main(argv.urls, argv.crawlLimit, argv.shouldSummarize);
+            await main(argv.urls, argv.crawlLimit, argv.shouldSummarize, argv.agentName);
         },
     })
     .help()

@@ -32,7 +32,7 @@ export const agents: { [key: string]: IDefaultAgentManagerAgentsConfig } = {
         }
     },
     "langchain-pinecone-chat-qa": {
-        agent: new LangchainPineconeChatQA(),
+        agent: new LangchainPineconeChatQA("convostack-docs"),
         metadata: {
             displayName: "ConvoStack Docs Agent",
             primer: "I am an OpenAI and Pinecone-powered Langchain QA Chain. Ask me anything about the ConvoStack docs."

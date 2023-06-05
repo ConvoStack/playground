@@ -6,7 +6,7 @@ export type Metadata = {
     chunk: string,
 }
 
-const getMatchesFromEmbeddings = async (embeddings: number[], pinecone: PineconeClient, topK: number): Promise<ScoredVector[]> => {
+const getMatchesFromEmbeddings = async (embeddings: number[], pinecone: PineconeClient, topK: number, agentName: string): Promise<ScoredVector[]> => {
     if (!process.env.PINECONE_INDEX_NAME) {
         throw (new Error("PINECONE_INDEX_NAME is not set"))
     }
@@ -15,7 +15,8 @@ const getMatchesFromEmbeddings = async (embeddings: number[], pinecone: Pinecone
     const queryRequest = {
         vector: embeddings,
         topK,
-        includeMetadata: true
+        namespace: agentName,
+        includeMetadata: true,
     }
     try {
         const queryResult = await index.query({

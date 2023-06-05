@@ -13,7 +13,8 @@
     "studio-postgres": "source .env && npx convostack-storage-engine-prisma-postgres studio --dir ./postgres-storage --db-url \"$DATABASE_URL\" --shadow-db-url \"$SHADOW_DATABASE_URL\"",
     "migrate-mysql": "source .env && npx convostack-storage-engine-prisma-mysql migrate --dir ./mysql-storage --db-url \"$DATABASE_URL\" --shadow-db-url \"$SHADOW_DATABASE_URL\"",
     "studio-mysql": "source .env && npx convostack-storage-engine-prisma-mysql studio --dir ./mysql-storage --db-url \"$DATABASE_URL\" --shadow-db-url \"$SHADOW_DATABASE_URL\"",
-    "pinecone-load-convostack-docs": "ts-node scripts/pinecone-load-websites.ts crawl --urls https://docs.convostack.ai --crawlLimit 1000 --shouldSummarize false"
+    "pinecone-load--docs": "ts-node scripts/pinecone-load-websites.ts crawl --urls https://docs.convostack.ai --crawlLimit 1000 --shouldSummarize true --agentName convostack-docs",
+    "load-docs": "ts-node scripts/pinecone-load-websites.ts"
   },
   "dependencies": {
     "@dqbd/tiktoken": "^0.4.0",
