@@ -23,18 +23,11 @@ import {createRedisInstance} from "./utils/redis";
 console.log("Configuring server...");
 const port = process.env.PORT || "3000";
 const host = process.env.HOST || "localhost";
-const origins = process.env.CORS_ALLOWED_ORIGINS ? process.env.CORS_ALLOWED_ORIGINS.split(',') : ["http://localhost:5173", "https://studio.apollographql.com"]
+const origins = process.env.CORS_ALLOWED_ORIGINS ? process.env.CORS_ALLOWED_ORIGINS.split(',') : "*"
 
 // CORS setup is important to make sure that browsers don't block our clients' ConvoStack API requests
 const corsOptions: CorsOptions = {
-    origin: (requestOrigin: string | undefined, callback: (err: Error | null, origin?: boolean) => void) => {
-        const newOrigins = origins.concat([requestOrigin])
-        if (newOrigins.includes(requestOrigin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: origins,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     preflightContinue: false,
     optionsSuccessStatus: 204
