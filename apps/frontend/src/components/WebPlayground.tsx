@@ -62,14 +62,15 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
         <div className="flex flex-col w-80 border-r-1 pb-8 px-2">
           <p className="text-lg font-bold pt-5">Get Started</p>
           <p className="text-sm mt-4">
-            Welcome to the ConvoStack Playground Repo. Here, you can try our
-            developer playground that demonstrates some of the things you can do
-            with the ConvoStack library.{" "}
+            {defaultAgent
+              ? "Welcome to the ConvoStack Playground Repo with your own Langchain agent running live in the widget and embeddable chat component."
+              : "Welcome to the ConvoStack Playground Repo. Here, you can try our developer playground that demonstrates some of the things you can do with the ConvoStack library."}
           </p>
           <p className="text-sm mt-4">
-            We encourage you to learn from this example or build upon it with
-            your own AI models. For more detailed documentation and information,
-            visit the{" "}
+            {defaultAgent
+              ? "Your Langchain agent is currently powered by ConvoStack's backend and frontend framework to create a production-ready chatbot."
+              : "We encourage you to learn from this example or build upon it with your own AI models."}{" "}
+            For more detailed documentation and information, visit the{" "}
             <a
               href="https://convostack.ai/"
               className="font-bold text-sky-400"
@@ -78,8 +79,13 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
               ConvoStack website.
             </a>{" "}
           </p>
-          <p className="text-md font-bold mt-4">Some Tips</p>
-          <Tips />
+
+          {!defaultAgent && (
+            <>
+              <p className="text-md font-bold mt-4">Some Tips</p>
+              <Tips />
+            </>
+          )}
         </div>
         <div className="flex flex-col w-full">
           <div className="border-b-1 pb-4 mb-4 flex flex-row items-center justify-between w-full">
