@@ -11,6 +11,7 @@ interface MobilePlaygroundProps {
   setEmbedContext: (arg: string) => void;
   widgetContext: string;
   setWidgetContext: (arg: string) => void;
+  defaultAgent?: string;
 }
 
 const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
@@ -18,6 +19,7 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
   setEmbedContext,
   widgetContext,
   setWidgetContext,
+  defaultAgent,
 }) => {
   const {
     toggleWidgetWindow,
@@ -27,7 +29,9 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
     activeConversationId,
     embedActiveConversationId,
   } = useConvoStack();
-  const [selectedValue, setSelectedValue] = useState<string>("default");
+  const [selectedValue, setSelectedValue] = useState<string>(
+    defaultAgent || "default"
+  );
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
     openConversation(null, event.target.value, undefined, "test");
@@ -49,7 +53,7 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
       }
     };
 
-    fetchAgents();
+    !defaultAgent && fetchAgents();
   }, []);
 
   return (
@@ -101,21 +105,23 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
         <div className="flex flex-col w-full">
           <div className="mb-4 flex flex-row items-center justify-between">
             <p className="text-lg font-bold">Playground</p>
-            <div>
-              {!loading && (
-                <select
-                  value={selectedValue}
-                  onChange={handleSelectChange}
-                  className=" bg-white text-sm rounded-lg block pl-2 py-2.5 dark:placeholder-gray-400 focus:ring-0 focus:outline-none border-1"
-                >
-                  {agents.map((agent) => (
-                    <option key={agent.key} value={agent.key}>
-                      {agent.displayName}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
+            {!defaultAgent && (
+              <div>
+                {!loading && (
+                  <select
+                    value={selectedValue}
+                    onChange={handleSelectChange}
+                    className=" bg-white text-sm rounded-lg block pl-2 py-2.5 dark:placeholder-gray-400 focus:ring-0 focus:outline-none border-1"
+                  >
+                    {agents.map((agent) => (
+                      <option key={agent.key} value={agent.key}>
+                        {agent.displayName}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
+            )}
           </div>
           <div className="flex flex-col">
             <div className="border-1">

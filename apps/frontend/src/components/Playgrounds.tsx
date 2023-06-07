@@ -2,7 +2,11 @@ import { useState } from "react";
 import MobilePlayground from "./MobilePlayground";
 import WebPlayground from "./WebPlayground";
 
-const Playgrounds: React.FC = () => {
+interface PlaygroundsProps {
+  defaultAgent?: string;
+}
+
+const Playgrounds: React.FC<PlaygroundsProps> = ({ defaultAgent }) => {
   const [embedContext, setEmbedContext] = useState("");
   const [widgetContext, setWidgetContext] = useState("");
   return (
@@ -14,6 +18,7 @@ const Playgrounds: React.FC = () => {
           setEmbedContext={setEmbedContext}
           widgetContext={widgetContext}
           setWidgetContext={setWidgetContext}
+          defaultAgent={defaultAgent}
         />
       </div>
       <div className="max-md:hidden">
@@ -23,6 +28,7 @@ const Playgrounds: React.FC = () => {
           setEmbedContext={setEmbedContext}
           widgetContext={widgetContext}
           setWidgetContext={setWidgetContext}
+          defaultAgent={defaultAgent}
         />
       </div>
     </div>
