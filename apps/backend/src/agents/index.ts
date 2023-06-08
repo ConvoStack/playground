@@ -45,7 +45,7 @@ export const agents: { [key: string]: IDefaultAgentManagerAgentsConfig } = {
 export type PlaygroundAgentManagerAgentsConfig = IDefaultAgentManagerAgentsConfig
 
 export class PlaygroundAgentManager implements IAgentManager {
-    private readonly proxyUrl = 'https://playground-proxy.convostack.ai/client';
+    private readonly proxyUrl = process.env.PLAYGROUND_PROXY_CLIENT_URL || 'https://playground-proxy.convostack.ai/client';
     private readonly proxyAgentPrefix = 'pxy::';
     private agents: {
         [key: string]: PlaygroundAgentManagerAgentsConfig
@@ -80,7 +80,8 @@ export class PlaygroundAgentManager implements IAgentManager {
 
     getProxyAgent(key: string) {
         const agentId = key.substring(this.proxyAgentPrefix.length)
-        return new AgentHTTPClient(`${this.proxyUrl}?agentId=${encodeURIComponent(agentId)}`);
+        const url = `${this.proxyUrl}?agentId=${encodeURIComponent(agentId)}`;
+        return new AgentHTTPClient(url);
     }
 
     getAgent(key: string): IAgent {
