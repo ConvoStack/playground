@@ -104,8 +104,7 @@ export class PlaygroundAgentManager implements IAgentManager {
 
     getAgentPrimer(key: string): string {
         if (key.startsWith(this.proxyAgentPrefix)) {
-            // TODO primer for proxy agent
-            return "ConvoStack Dev Agent Primer";
+            return "This is your agent running live on ConvoStack. Write me a message, and I will respond! Feel free to give ConvoStack a ⭐️ to support open-source AI projects!";
         }
         return this.agents[key].metadata.primer;
     }
