@@ -12,11 +12,10 @@ import {IStorageEngine, IConversationEventServiceOptions} from "convostack/model
 import cors, {CorsOptions} from "cors";
 import {AuthJWT} from "convostack/auth-jwt";
 import {createServer} from "http";
-import {DefaultAgentManager} from "convostack/agent";
 import {RedisPubSub} from "graphql-redis-subscriptions";
 import path from "path";
 import {serveStaticReactAppHandler} from "./utils/static";
-import {agents, defaultAgentKey} from "./agents";
+import {agents, defaultAgentKey, PlaygroundAgentManager} from "./agents";
 import {createRedisInstance} from "./utils/redis";
 
 // Start configuring the server
@@ -97,7 +96,7 @@ const main = async () => {
                 process.env.REQUIRE_USER_VERIFICATION_HASH == "false"
             )
         }),
-        agents: new DefaultAgentManager(agents, defaultAgentKey),
+        agents: new PlaygroundAgentManager(agents, defaultAgentKey),
         conversationEventServiceOptions: convEventsOpts,
     });
 
