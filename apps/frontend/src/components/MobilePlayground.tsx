@@ -82,24 +82,42 @@ const MobilePlayground: React.FC<MobilePlaygroundProps> = ({
               </svg>
             </div>
             <p className="text-sm mt-4">
-              Welcome to the ConvoStack Playground Repo. Here, you can try our
-              developer playground that demonstrates some of the things you can
-              do with the ConvoStack library.{" "}
+              {defaultAgent
+                ? "Welcome to the ConvoStack Playground Repo with your own Langchain agent running live in the widget and embeddable chat component."
+                : "Welcome to the ConvoStack Playground Repo. Here, you can try our developer playground that demonstrates some of the things you can do with the ConvoStack library."}
             </p>
             <p className="text-sm mt-4">
-              We encourage you to learn from this example or build upon it with
-              your own AI models. For more detailed documentation and
-              information, visit the{" "}
+              {defaultAgent
+                ? "Your Langchain agent is currently powered by ConvoStack's backend and frontend framework to create a production-ready chatbot."
+                : "We encourage you to learn from this example or build upon it with your own AI models."}{" "}
+              To deploy to production, visit our docs site{" "}
               <a
-                href="https://convostack.ai/"
+                href="https://docs.convostack.ai/production/deploy-with-fly-io"
                 className="font-bold text-sky-400"
                 target="_blank"
               >
-                ConvoStack website.
+                here.
               </a>{" "}
             </p>
-            <p className="text-md font-bold mt-4">Some Tips</p>
-            <Tips />
+
+            {defaultAgent && (
+              <p className="text-sm mt-4">
+                For more detailed documentation and information, visit the{" "}
+                <a
+                  href="https://convostack.ai/"
+                  className="font-bold text-sky-400"
+                  target="_blank"
+                >
+                  ConvoStack website.
+                </a>{" "}
+              </p>
+            )}
+            {!defaultAgent && (
+              <>
+                <p className="text-md font-bold mt-4">Some Tips</p>
+                <Tips />
+              </>
+            )}
           </div>
         )}
         <div className="flex flex-col w-full">
