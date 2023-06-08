@@ -11,6 +11,7 @@ interface WebPlaygroundProps {
   setEmbedContext: (arg: string) => void;
   widgetContext: string;
   setWidgetContext: (arg: string) => void;
+  defaultAgent?: string;
 }
 
 const WebPlayground: React.FC<WebPlaygroundProps> = ({
@@ -18,6 +19,7 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
   setEmbedContext,
   widgetContext,
   setWidgetContext,
+  defaultAgent,
 }) => {
   const {
     toggleWidgetWindow,
@@ -27,7 +29,10 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
     activeConversationId,
     embedActiveConversationId,
   } = useConvoStack();
-  const [selectedValue, setSelectedValue] = useState<string>("default");
+  const [selectedValue, setSelectedValue] = useState<string>(
+    defaultAgent ? defaultAgent : "default"
+  );
+  console.log(defaultAgent, "sdfsdfsf", selectedValue);
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
     openConversation(null, event.target.value, undefined, "test");
@@ -47,7 +52,7 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
       }
     };
 
-    fetchAgents();
+    !defaultAgent && fetchAgents();
   }, []);
 
   return (
@@ -57,14 +62,15 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
         <div className="flex flex-col w-80 border-r-1 pb-8 px-2">
           <p className="text-lg font-bold pt-5">Get Started</p>
           <p className="text-sm mt-4">
-            Welcome to the ConvoStack Playground Repo. Here, you can try our
-            developer playground that demonstrates some of the things you can do
-            with the ConvoStack library.{" "}
+            {defaultAgent
+              ? "Welcome to the ConvoStack Playground Repo with your own Langchain agent running live in the widget and embeddable chat component."
+              : "Welcome to the ConvoStack Playground Repo. Here, you can try our developer playground that demonstrates some of the things you can do with the ConvoStack library."}
           </p>
           <p className="text-sm mt-4">
-            We encourage you to learn from this example or build upon it with
-            your own AI models. For more detailed documentation and information,
-            visit the{" "}
+            {defaultAgent
+              ? "Your Langchain agent is currently powered by ConvoStack's backend and frontend framework to create a production-ready chatbot."
+              : "We encourage you to learn from this example or build upon it with your own AI models."}{" "}
+            For more detailed documentation and information, visit the{" "}
             <a
               href="https://convostack.ai/"
               className="font-bold text-sky-400"
@@ -73,27 +79,34 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
               ConvoStack website.
             </a>{" "}
           </p>
-          <p className="text-md font-bold mt-4">Some Tips</p>
-          <Tips />
+
+          {!defaultAgent && (
+            <>
+              <p className="text-md font-bold mt-4">Some Tips</p>
+              <Tips />
+            </>
+          )}
         </div>
         <div className="flex flex-col w-full">
           <div className="border-b-1 pb-4 mb-4 flex flex-row items-center justify-between w-full">
             <p className="text-lg font-bold ml-4 pt-4">Playground</p>
-            <div className="mr-4 mt-4">
-              {!loading && (
-                <select
-                  value={selectedValue}
-                  onChange={handleSelectChange}
-                  className="border border-gray-300 bg-white text-sm rounded-lg block w-48 pl-2 py-2.5 dark:placeholder-gray-400 focus:ring-0 focus:outline-none"
-                >
-                  {agents.map((agent) => (
-                    <option key={agent.key} value={agent.key}>
-                      {agent.displayName}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
+            {!defaultAgent && (
+              <div className="mr-4 mt-4">
+                {!loading && (
+                  <select
+                    value={selectedValue}
+                    onChange={handleSelectChange}
+                    className="border border-gray-300 bg-white text-sm rounded-lg block w-48 pl-2 py-2.5 dark:placeholder-gray-400 focus:ring-0 focus:outline-none"
+                  >
+                    {agents.map((agent) => (
+                      <option key={agent.key} value={agent.key}>
+                        {agent.displayName}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
+            )}
           </div>
           <div className="flex flex-row ml-4 pb-4 w-full">
             <ConvoStackEmbed

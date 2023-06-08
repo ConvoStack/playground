@@ -1,8 +1,9 @@
-import {IDefaultAgentManagerAgentsConfig} from "convostack/agent";
+import {DefaultAgentManager, IAgent, IDefaultAgentManagerAgentsConfig} from "convostack/agent";
 import {LangchainChat} from "./langchain-chat";
 import {AgentEcho} from "convostack/agent-echo";
 import {LangchainConversationalRetrievalQA} from "./langchain-conversational-retrieval-qa";
 import {LangchainPineconeChatQA} from "./langchain-pinecone-chat-qa";
+import {IAgentManager} from "@convostack/agent";
 
 // This is the default agent key that will be used for new conversations in ConvoStack.
 // If a client specifies an agent key on their own, it will override this default.
@@ -39,3 +40,92 @@ export const agents: { [key: string]: IDefaultAgentManagerAgentsConfig } = {
         }
     },
 };
+
+export type PlaygroundAgentManagerAgentsConfig = IDefaultAgentManagerAgentsConfig
+
+export class PlaygroundAgentManager implements IAgentManager {
+    private readonly proxyAgentPrefix = 'pxy::';
+    private agents: {
+        [key: string]: PlaygroundAgentManagerAgentsConfig
+    };
+    private defaultAgentKey: string;
+
+    constructor(agents: {
+        [key: string]: PlaygroundAgentManagerAgentsConfig
+    }, defaultAgentKey: string) {
+        if (Object.keys(agents).length === 0) {
+            throw new Error("No agents provided");
+        }
+        if (!defaultAgentKey || !agents[defaultAgentKey]) {
+            throw new Error(`Default agent key '${defaultAgentKey}' is not provided or not found in available agents`);
+        }
+        for (const key in agents) {
+            if (!key) {
+                throw new Error("Agent key cannot be an empty string");
+            }
+        }
+        this.agents = agents;
+        this.defaultAgentKey = defaultAgentKey;
+    }
+
+    getDefaultAgentKey(): string {
+        return this.defaultAgentKey;
+    }
+
+    getDefaultAgent(): IAgent {
+        return this.agents[this.defaultAgentKey].agent;
+    }
+
+    getProxyAgent(key: string) {
+        const agentId = key.substring(this.proxyAgentPrefix.length)
+        // TODO create an HTTP agent using the agentId and prod proxy URL
+        return new AgentEcho();
+    }
+
+    getAgent(key: string): IAgent {
+        if (key.startsWith(this.proxyAgentPrefix)) {
+            return this.getProxyAgent(key);
+        }
+        const agent = this.agents[key];
+        if (!agent) {
+            throw new Error(`Agent with key '${key}' not found`);
+        }
+        return agent.agent;
+    }
+
+    getAgentDisplayName(key: string): string {
+        if (key.startsWith(this.proxyAgentPrefix)) {
+            return "ConvoStack Dev Agent";
+        }
+        return this.agents[key].metadata.displayName;
+    }
+
+    getAgentPrimer(key: string): string {
+        if (key.startsWith(this.proxyAgentPrefix)) {
+            // TODO primer for proxy agent
+            return "ConvoStack Dev Agent Primer";
+        }
+        return this.agents[key].metadata.primer;
+    }
+
+    getAgentHumanRole(key: string): string {
+        // TODO consider allowing customization of the Human role string
+        return "Human";
+    }
+
+    getAgentAIRole(key: string): string {
+        // TODO consider allowing customization of the AI role string
+        return "AI";
+    }
+
+    listAvailableAgents(): string[] {
+        return Object.keys(this.agents);
+    }
+
+    getAgentAvatarUrl(key: string): string | null {
+        if (key.startsWith(this.proxyAgentPrefix)) {
+            return null;
+        }
+        return this.agents[key].metadata.avatarUrl;
+    }
+}
