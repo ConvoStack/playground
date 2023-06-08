@@ -90,7 +90,7 @@ const WebPlayground: React.FC<WebPlaygroundProps> = ({
         <div className="flex flex-col w-full">
           <div className="border-b-1 pb-4 mb-4 flex flex-row items-center justify-between w-full">
             <p className="text-lg font-bold ml-4 pt-4">Playground</p>
-            {defaultAgent && (
+            {!defaultAgent && (
               <div className="mr-4 mt-4">
                 {!loading && (
                   <select

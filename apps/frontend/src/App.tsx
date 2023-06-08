@@ -1,5 +1,4 @@
 import { ConvoStackWidget } from "convostack/frontend-react";
-import { useEffect, useState } from "react";
 import Playgrounds from "./components/Playgrounds";
 
 const App: React.FC = () => {
