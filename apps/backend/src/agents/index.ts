@@ -1,9 +1,10 @@
-import {DefaultAgentManager, IAgent, IDefaultAgentManagerAgentsConfig} from "convostack/agent";
+import {IAgent, IDefaultAgentManagerAgentsConfig} from "convostack/agent";
 import {LangchainChat} from "./langchain-chat";
 import {AgentEcho} from "convostack/agent-echo";
 import {LangchainConversationalRetrievalQA} from "./langchain-conversational-retrieval-qa";
 import {LangchainPineconeChatQA} from "./langchain-pinecone-chat-qa";
-import {IAgentManager} from "@convostack/agent";
+import {IAgentManager} from "convostack/agent";
+import {AgentHTTPClient} from 'convostack/agent-http'
 
 // This is the default agent key that will be used for new conversations in ConvoStack.
 // If a client specifies an agent key on their own, it will override this default.
@@ -44,6 +45,7 @@ export const agents: { [key: string]: IDefaultAgentManagerAgentsConfig } = {
 export type PlaygroundAgentManagerAgentsConfig = IDefaultAgentManagerAgentsConfig
 
 export class PlaygroundAgentManager implements IAgentManager {
+    private readonly proxyUrl = 'https://playground-proxy.convostack.ai/client';
     private readonly proxyAgentPrefix = 'pxy::';
     private agents: {
         [key: string]: PlaygroundAgentManagerAgentsConfig
@@ -78,8 +80,7 @@ export class PlaygroundAgentManager implements IAgentManager {
 
     getProxyAgent(key: string) {
         const agentId = key.substring(this.proxyAgentPrefix.length)
-        // TODO create an HTTP agent using the agentId and prod proxy URL
-        return new AgentEcho();
+        return new AgentHTTPClient(`${this.proxyUrl}?agentId=${encodeURIComponent(agentId)}`);
     }
 
     getAgent(key: string): IAgent {
